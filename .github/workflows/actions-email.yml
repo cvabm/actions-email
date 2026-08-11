@@ -1,10 +1,8 @@
-# 每隔 5 分钟发送「定时任务A」邮件
 name: actions-email
 
 on:
   schedule:
-    # 每 5 分钟（UTC，与时区无关）
-    - cron: "*/5 * * * *"
+    - cron: '12 0 * * *'   # 北京时间每天 08:12
   workflow_dispatch:
 
 jobs:
