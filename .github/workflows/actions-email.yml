@@ -1,0 +1,31 @@
+# 每隔 5 分钟发送「定时任务A」邮件
+name: actions-email
+
+on:
+  schedule:
+    # 每 5 分钟（UTC，与时区无关）
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Beijing timestamp
+        id: ts
+        run: echo "now=$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')" >> "$GITHUB_OUTPUT"
+
+      - name: Send email via Gmail SMTP
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          from: ${{ secrets.GMAIL_USERNAME }}
+          to: ${{ secrets.EMAIL_TO }}
+          subject: 定时任务A
+          body: |
+            定时任务A
+            ${{ steps.ts.outputs.now }}
